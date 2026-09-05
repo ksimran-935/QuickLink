@@ -12,7 +12,7 @@ const Analytics = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  useEffect(() => {
+    useEffect(() => {
     const load = async () => {
       try {
         const res = await api.get(`/urls/${id}/analytics`);
@@ -23,7 +23,15 @@ const Analytics = () => {
         setLoading(false);
       }
     };
-    load();
+
+    load(); // 1. Fetch immediately when the page opens
+    
+    // 2. Set up Polling: Fetch new data every 5 seconds (5000 milliseconds)
+    const intervalId = setInterval(load, 5000);
+
+    // 3. Cleanup: Stop the timer if the user leaves the analytics page
+    return () => clearInterval(intervalId);
+    
   }, [id]);
 
   if (loading) {
